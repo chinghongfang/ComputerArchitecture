@@ -17,29 +17,23 @@
 
 #include<stdio.h>
 // Greedy construct
-int main()
-{
-    int nums[] = {1, 5, 10};     // Numbers we have.
-    int len = 3;                // The length of the array
-    int target = 20;            // The upper bound of the range
+int minPatches(const int *, int, int);
 
-    int ans = 0;                // Number of patches we need
-    long now = 0;               // The range of number we can form now
-    int idx = 0;                // The `nums` index we have consumed 
-    while (now < target) {
-        // check not out of bound
-        // check is there any gap between 
-        //   [1, now] and [nums[idx], nums[idx]+now] 
-        if (idx < len && (long) nums[idx] <= now + 1) {
-            // Update the range we can form the number
-            now += nums[idx];
-            ++idx;
-        } else {
-            // Fill the gap with n+1 (The optimal choice.)
-            now += now + 1;
-            ++ans;
-        }
-    }
-    printf("%d\n", ans);
+int main(){
+    const int nums[] = {1,5,10};
+    const int numsSize = 3;
+    const int n = 2000000000;
+    printf("%d\n", minPatches(nums, numsSize, n));
     return 0;
+}
+
+// Using unsigned is enough.
+int minPatches(const int *nums, int numsSize, int n){ 
+    unsigned int m = 1, res = 0, i = 0;
+    while (m <= n)
+        // check is there any gap between [1, m] and [nums[idx], nums[idx]+now]
+        //     if there is no gap, use nums[idx].
+        //     else use the best number we can use
+        m += (i < numsSize && nums[i] <= m) ? nums[i++] : (res++, m); 
+    return res;
 }
